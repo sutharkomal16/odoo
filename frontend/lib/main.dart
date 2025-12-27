@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/equipment_list_screen.dart';
 import 'screens/kanban_board_screen.dart';
 import 'screens/calendar_view_screen.dart';
 import 'screens/reports_screen.dart';
 import 'theme/premium_theme.dart';
+import 'services/auth_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,8 +20,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: PremiumTheme.getLightTheme(),
-      home: const MaintenanceManagementApp(),
+      home: const AuthWrapper(),
       routes: {
+        '/login': (context) => const LoginScreen(),
         '/home': (context) => const MaintenanceManagementApp(),
         '/equipment': (context) => const EquipmentListScreen(),
         '/kanban': (context) => const KanbanBoardScreen(),
@@ -27,6 +30,22 @@ class MyApp extends StatelessWidget {
         '/reports': (context) => const ReportsScreen(),
       },
     );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final authService = AuthService();
+    
+    // Check if user is already authenticated
+    if (authService.isAuthenticated) {
+      return const MaintenanceManagementApp();
+    }
+    
+    return const LoginScreen();
   }
 }
 

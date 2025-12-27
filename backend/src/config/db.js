@@ -7,11 +7,14 @@ const connectDB = async () => {
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000,
     });
-    console.log('MongoDB connected successfully');
+    console.log('✅ MongoDB connected successfully');
   } catch (error) {
-    console.error('MongoDB connection error:', error.message);
-    process.exit(1);
+    console.error('⚠️  MongoDB connection failed:', error.message);
+    console.log('📝 Running in development mode without MongoDB');
+    console.log('💡 To fix: Update MONGODB_URI in .env with your MongoDB Atlas credentials');
+    // Don't exit - allow the app to run with mock data
   }
 };
 

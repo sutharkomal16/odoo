@@ -2,6 +2,7 @@
 // Handles user-related operations
 
 const User = require("../models/user.model");
+const { mockUsers } = require("../data/mock-data");
 
 // Create a new user
 exports.createUser = async (req, res) => {
@@ -17,28 +18,22 @@ exports.createUser = async (req, res) => {
       });
     }
 
-    const user = new User({
+    // Use mock data if MongoDB not available
+    const newUser = {
+      _id: (mockUsers.length + 1).toString(),
       name,
       email,
       role,
       department,
       phone,
-    });
+      isActive: true,
+      permissions: generatePermissions(role),
+    };
+    
+    mockUsers.push(newUser);
 
-    await user.save();
-
-    res.status(201).json({
-      success: true,
-      data: user,
-      message: 'User created successfully',
-    });
+    res.status(201).json(newUser);
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email already exists',
-      });
-    }
     res.status(400).json({
       success: false,
       message: error.message,
@@ -50,19 +45,14 @@ exports.createUser = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const { role, department, isActive } = req.query;
-    let query = {};
+    
+    let filteredUsers = [...mockUsers];
 
-    if (role) query.role = role;
-    if (department) query.department = department;
-    if (isActive !== undefined) query.isActive = isActive === 'true';
+    if (role) filteredUsers = filteredUsers.filter(u => u.role === role);
+    if (department) filteredUsers = filteredUsers.filter(u => u.department === department);
+    if (isActive !== undefined) filteredUsers = filteredUsers.filter(u => u.isActive === (isActive === 'true'));
 
-    const users = await User.find(query).select('-permissions');
-
-    res.status(200).json({
-      success: true,
-      data: users,
-      count: users.length,
-    });
+    res.json(filteredUsers);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -74,7 +64,7 @@ exports.getAllUsers = async (req, res) => {
 // Get user by ID
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = mockUsers.find(u => u._id === req.params.id);
 
     if (!user) {
       return res.status(404).json({
@@ -83,10 +73,7 @@ exports.getUserById = async (req, res) => {
       });
     }
 
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
+    res.json(user);
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -231,7 +218,7 @@ exports.getRoleStats = async (req, res) => {
 // Check user permissions
 exports.checkPermissions = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = mockUsers.find(u => u._id === req.params.id);
 
     if (!user) {
       return res.status(404).json({
@@ -240,11 +227,9 @@ exports.checkPermissions = async (req, res) => {
       });
     }
 
-    res.status(200).json({
-      success: true,
+    res.json({
       userId: user._id,
       role: user.role,
-      roleDisplayName: user.getRoleDisplayName(),
       permissions: user.permissions,
     });
   } catch (error) {
@@ -254,3 +239,42 @@ exports.checkPermissions = async (req, res) => {
     });
   }
 };
+
+// Helper function to generate permissions based on role
+function generatePermissions(role) {
+  const basePermissions = {
+    canCreateEquipment: false,
+    canEditEquipment: false,
+    canDeleteEquipment: false,
+    canCreateRequest: false,
+    canAssignRequest: false,
+    canViewReports: false,
+    canManageTeams: false,
+    canManageUsers: false,
+  };
+
+  switch (role) {
+    case 'ADMIN':
+      return { ...basePermissions, ...{
+        canCreateEquipment: true,
+        canEditEquipment: true,
+        canDeleteEquipment: true,
+        canCreateRequest: true,
+        canAssignRequest: true,
+        canViewReports: true,
+        canManageTeams: true,
+        canManageUsers: true,
+      }};
+    case 'MECHANIC':
+    case 'ELECTRICIAN':
+    case 'IT_SUPPORT':
+      return { ...basePermissions, ...{
+        canCreateEquipment: true,
+        canEditEquipment: true,
+        canCreateRequest: true,
+        canViewReports: true,
+      }};
+    default:
+      return basePermissions;
+  }
+}

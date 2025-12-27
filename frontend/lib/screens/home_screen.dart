@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../services/auth_service.dart';
 import '../theme/premium_theme.dart';
 import 'equipment_list_screen.dart';
 import 'team_list_screen.dart';
@@ -7,6 +8,7 @@ import 'kanban_board_screen.dart';
 import 'calendar_view_screen.dart';
 import 'reports_screen.dart';
 import 'maintenance_request_form_screen.dart';
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -61,11 +63,75 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = AuthService();
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gear Guard - Maintenance Management'),
         elevation: 8,
         shadowColor: Colors.black.withOpacity(0.5),
+        actions: [
+          // User Info and Logout
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Row(
+                children: [
+                  Icon(
+                    _getRoleIcon(authService.currentRole),
+                    color: PremiumColors.accentGold,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        authService.currentUser ?? 'Guest',
+                        style: const TextStyle(
+                          color: PremiumColors.textPrimary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        _getRoleDisplayName(authService.currentRole),
+                        style: const TextStyle(
+                          color: PremiumColors.textSecondary,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 12),
+                  PopupMenuButton(
+                    icon: const Icon(Icons.more_vert, color: PremiumColors.textPrimary),
+                    itemBuilder: (BuildContext context) => [
+                      PopupMenuItem(
+                        child: const Row(
+                          children: [
+                            Icon(Icons.logout, size: 18),
+                            SizedBox(width: 8),
+                            Text('Logout'),
+                          ],
+                        ),
+                        onTap: () {
+                          authService.logout();
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (_) => const LoginScreen()),
+                            (route) => false,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -746,5 +812,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void refresh() {
     _loadDashboardData();
+  }
+
+  String _getRoleDisplayName(String? role) {
+    switch (role) {
+      case 'ADMIN':
+        return 'Administrator';
+      case 'MECHANIC':
+        return 'Mechanic';
+      case 'ELECTRICIAN':
+        return 'Electrician';
+      case 'IT_SUPPORT':
+        return 'IT Support';
+      default:
+        return 'User';
+    }
+  }
+
+  IconData _getRoleIcon(String? role) {
+    switch (role) {
+      case 'ADMIN':
+        return Icons.admin_panel_settings;
+      case 'MECHANIC':
+        return Icons.build;
+      case 'ELECTRICIAN':
+        return Icons.bolt;
+      case 'IT_SUPPORT':
+        return Icons.computer;
+      default:
+        return Icons.person;
+    }
   }
 }

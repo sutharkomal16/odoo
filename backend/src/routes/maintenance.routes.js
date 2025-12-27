@@ -3,89 +3,61 @@
 const express = require('express');
 const router = express.Router();
 
-const equipmentController = require('../controllers/equipment.controller');
-const maintenanceTeamController = require('../controllers/maintenance-team.controller');
-const maintenanceRequestController = require('../controllers/maintenance-request.controller');
+// Using mock-data controller for development
+const mockController = require('../controllers/mock-data.controller');
 
 // ==================== EQUIPMENT ROUTES ====================
 // Create equipment
-router.post('/equipment', equipmentController.createEquipment);
+router.post('/equipment', mockController.createEquipment);
 
 // Get all equipment (with filters)
-router.get('/equipment', equipmentController.getAllEquipment);
+router.get('/equipment', mockController.getAllEquipment);
 
 // Get equipment by ID
-router.get('/equipment/:id', equipmentController.getEquipmentById);
+router.get('/equipment/:id', mockController.getEquipmentById);
 
 // Update equipment
-router.put('/equipment/:id', equipmentController.updateEquipment);
+router.put('/equipment/:id', mockController.updateEquipment);
 
 // Delete equipment
-router.delete('/equipment/:id', equipmentController.deleteEquipment);
+router.delete('/equipment/:id', mockController.deleteEquipment);
 
 // Get maintenance requests for specific equipment
-router.get('/equipment/:id/maintenance', equipmentController.getEquipmentMaintenance);
+router.get('/equipment/:id/maintenance', mockController.getEquipmentMaintenance);
 
 // Get open maintenance count for equipment (smart button)
-router.get('/equipment/:id/maintenance-count', equipmentController.getMaintenanceCount);
-
-// Mark equipment as scrap
-router.patch('/equipment/:id/scrap', equipmentController.scrapEquipment);
+router.get('/equipment/:id/maintenance-count', mockController.getMaintenanceCount);
 
 // ==================== MAINTENANCE TEAM ROUTES ====================
 // Create team
-router.post('/teams', maintenanceTeamController.createTeam);
+router.post('/teams', mockController.createTeam);
 
 // Get all teams
-router.get('/teams', maintenanceTeamController.getAllTeams);
+router.get('/teams', mockController.getAllTeams);
 
 // Get team by ID
-router.get('/teams/:id', maintenanceTeamController.getTeamById);
+router.get('/teams/:id', mockController.getTeamById);
 
 // Update team
-router.put('/teams/:id', maintenanceTeamController.updateTeam);
-
-// Add member to team
-router.post('/teams/:id/members', maintenanceTeamController.addTeamMember);
-
-// Remove member from team
-router.delete('/teams/:id/members', maintenanceTeamController.removeTeamMember);
+router.put('/teams/:id', mockController.updateTeam);
 
 // Delete/deactivate team
-router.delete('/teams/:id', maintenanceTeamController.deleteTeam);
+router.delete('/teams/:id', mockController.deleteTeam);
 
 // ==================== MAINTENANCE REQUEST ROUTES ====================
 // Create maintenance request (with auto-fill)
-router.post('/requests', maintenanceRequestController.createMaintenanceRequest);
+router.post('/requests', mockController.createRequest);
 
 // Get all requests (with filters)
-router.get('/requests', maintenanceRequestController.getAllRequests);
+router.get('/requests', mockController.getAllRequests);
 
 // Get request by ID
-router.get('/requests/:id', maintenanceRequestController.getRequestById);
+router.get('/requests/:id', mockController.getRequestById);
 
 // Update request status (for Kanban drag & drop)
-router.patch('/requests/:id/status', maintenanceRequestController.updateRequestStatus);
-
-// Assign request to technician
-router.patch('/requests/:id/assign', maintenanceRequestController.assignRequest);
-
-// Get requests grouped by status (Kanban view)
-router.get('/requests-kanban/all', maintenanceRequestController.getRequestsByStatus);
-
-// Get preventive maintenance requests (for Calendar)
-router.get('/requests/type/preventive', maintenanceRequestController.getPreventiveRequests);
-
-// Get requests by date range
-router.get('/requests/dates/range', maintenanceRequestController.getRequestsByDateRange);
-
-// Get report: requests by team
-router.get('/reports/by-team', maintenanceRequestController.getRequestsByTeam);
-
-// Get report: requests by category
-router.get('/reports/by-category', maintenanceRequestController.getRequestsByCategory);
+router.patch('/requests/:id/status', mockController.updateRequestStatus);
 
 // Delete request
-router.delete('/requests/:id', maintenanceRequestController.deleteRequest);
+router.delete('/requests/:id', mockController.deleteRequest);
 
 module.exports = router;

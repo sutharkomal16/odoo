@@ -1,12 +1,16 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const connectDB = require("./config/db");
 
 const app = express();
 
-// Connect to MongoDB
-connectDB();
+// Try to connect to MongoDB, but continue if it fails (development mode)
+try {
+  const connectDB = require("./config/db");
+  connectDB();
+} catch (error) {
+  console.log("MongoDB connection failed, using mock data for development");
+}
 
 app.use(cors());
 app.use(express.json());
