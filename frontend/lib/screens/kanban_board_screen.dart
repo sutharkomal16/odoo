@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/maintenance_request.dart';
 import '../services/api_service.dart';
+import '../theme/premium_theme.dart';
 
 class KanbanBoardScreen extends StatefulWidget {
   const KanbanBoardScreen({Key? key}) : super(key: key);
@@ -29,7 +30,8 @@ class _KanbanBoardScreenState extends State<KanbanBoardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Maintenance Kanban Board'),
-        backgroundColor: Colors.blue.shade700,
+        elevation: 8,
+        shadowColor: Colors.black.withOpacity(0.5),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -92,14 +94,29 @@ class _KanbanColumnState extends State<KanbanColumn> {
 
     return Container(
       width: 320,
-      color: Colors.grey.shade100,
+      decoration: BoxDecoration(
+        color: PremiumColors.bgSecondary,
+        border: Border(
+          left: BorderSide(
+            color: statusColor,
+            width: 4,
+          ),
+        ),
+      ),
       child: Column(
         children: [
           // Column Header
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: statusColor,
+              gradient: LinearGradient(
+                colors: [
+                  statusColor.withOpacity(0.9),
+                  statusColor.withOpacity(0.7),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,13 +127,16 @@ class _KanbanColumnState extends State<KanbanColumn> {
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: 0.3,
                   ),
                 ),
+                const SizedBox(height: 4),
                 Text(
                   '${widget.requests.length} tasks',
                   style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 12,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
@@ -143,15 +163,15 @@ class _KanbanColumnState extends State<KanbanColumn> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'New':
-        return Colors.blue;
+        return PremiumColors.statusInfo;
       case 'In Progress':
-        return Colors.orange;
+        return PremiumColors.statusPending;
       case 'Repaired':
-        return Colors.green;
+        return PremiumColors.statusSuccess;
       case 'On Hold':
-        return Colors.grey;
+        return PremiumColors.statusWarning;
       default:
-        return Colors.grey;
+        return PremiumColors.statusWarning;
     }
   }
 }

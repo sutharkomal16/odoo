@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
+import '../theme/premium_theme.dart';
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({Key? key}) : super(key: key);
@@ -16,7 +17,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Maintenance Reports'),
-        backgroundColor: Colors.blue.shade700,
+        elevation: 8,
+        shadowColor: Colors.black.withOpacity(0.5),
       ),
       body: Column(
         children: [

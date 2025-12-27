@@ -9,11 +9,16 @@ const maintenanceTeamSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      enum: ['Mechanics', 'Electricians', 'IT Support', 'General Maintenance', 'Other'],
+      enum: ['Mechanics Team', 'Electricians Team', 'IT Support Team', 'General Maintenance', 'Specialized Team'],
     },
     description: {
       type: String,
       trim: true,
+    },
+    specialization: {
+      type: String,
+      enum: ['MECHANIC', 'ELECTRICIAN', 'IT_SUPPORT', 'GENERAL'],
+      required: true,
     },
     members: [
       {
@@ -22,20 +27,19 @@ const maintenanceTeamSchema = new mongoose.Schema(
           ref: 'User',
           required: true,
         },
-        role: {
-          type: String,
-          enum: ['Manager', 'Technician', 'Lead'],
-          default: 'Technician',
-        },
         joinedDate: {
           type: Date,
           default: Date.now,
         },
       },
     ],
-    defaultTechnician: {
+    leader: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+    },
+    department: {
+      type: String,
+      enum: ['Production', 'IT', 'HR', 'Finance', 'Operations', 'Other'],
     },
     isActive: {
       type: Boolean,

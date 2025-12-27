@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/maintenance_request.dart';
 import '../services/api_service.dart';
+import '../theme/premium_theme.dart';
 import 'maintenance_request_form_screen.dart';
 
 class CalendarViewScreen extends StatefulWidget {
@@ -31,7 +32,8 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Preventive Maintenance Calendar'),
-        backgroundColor: Colors.blue.shade700,
+        elevation: 8,
+        shadowColor: Colors.black.withOpacity(0.5),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

@@ -4,6 +4,7 @@ import 'screens/equipment_list_screen.dart';
 import 'screens/kanban_board_screen.dart';
 import 'screens/calendar_view_screen.dart';
 import 'screens/reports_screen.dart';
+import 'theme/premium_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: PremiumTheme.getLightTheme(),
       home: const MaintenanceManagementApp(),
       routes: {
         '/home': (context) => const MaintenanceManagementApp(),
@@ -54,8 +56,6 @@ class _MaintenanceManagementAppState extends State<MaintenanceManagementApp> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue.shade700,
-        unselectedItemColor: Colors.grey,
         onTap: (index) {
           setState(() {
             _selectedIndex = index;

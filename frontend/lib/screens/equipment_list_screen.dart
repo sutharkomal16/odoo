@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/equipment.dart';
 import '../services/api_service.dart';
+import '../theme/premium_theme.dart';
 import 'equipment_detail_screen.dart';
 import 'equipment_form_screen.dart';
 
@@ -38,8 +39,8 @@ class _EquipmentListScreenState extends State<EquipmentListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Equipment Management'),
-        elevation: 0,
-        backgroundColor: Colors.blue.shade700,
+        elevation: 8,
+        shadowColor: Colors.black.withOpacity(0.5),
       ),
       body: Column(
         children: [
@@ -112,7 +113,6 @@ class _EquipmentListScreenState extends State<EquipmentListScreen> {
             ),
           ).then((_) => _loadEquipment());
         },
-        backgroundColor: Colors.blue.shade700,
         child: const Icon(Icons.add),
       ),
     );
@@ -129,9 +129,16 @@ class _EquipmentListScreenState extends State<EquipmentListScreen> {
           _loadEquipment();
         });
       },
-      selectedColor: Colors.blue.shade700,
+      selectedColor: PremiumColors.accentGold,
       labelStyle: TextStyle(
-        color: isSelected ? Colors.white : Colors.black,
+        color: isSelected ? PremiumColors.primaryDark : PremiumColors.textPrimary,
+        fontWeight: FontWeight.w600,
+        fontSize: 13,
+      ),
+      backgroundColor: PremiumColors.bgSecondary,
+      side: BorderSide(
+        color: isSelected ? PremiumColors.accentGold : PremiumColors.borderColor,
+        width: isSelected ? 2 : 0.5,
       ),
     );
   }
