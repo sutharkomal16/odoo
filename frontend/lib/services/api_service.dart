@@ -58,7 +58,7 @@ class ApiService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data is Map) {
-        return data;
+        return (data as Map).cast<String, dynamic>();
       }
     }
     throw Exception('Failed to fetch user');
@@ -87,7 +87,7 @@ class ApiService {
     if (response.statusCode == 201 || response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data is Map) {
-        return data;
+        return (data as Map).cast<String, dynamic>();
       }
     }
     throw Exception('Failed to create user');
@@ -119,7 +119,7 @@ class ApiService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data is Map) {
-        return data;
+        return (data as Map).cast<String, dynamic>();
       }
     }
     throw Exception('Failed to update user');
@@ -137,7 +137,7 @@ class ApiService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data is Map) {
-        return data;
+        return (data as Map).cast<String, dynamic>();
       }
     }
     return {'permissions': {}};
@@ -163,7 +163,7 @@ class ApiService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data is Map) {
-        return data;
+        return (data as Map).cast<String, dynamic>();
       }
     }
     return {};
